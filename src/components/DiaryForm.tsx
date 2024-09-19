@@ -2,6 +2,7 @@ import { useState } from "react"
 import axios from "axios"
 import diaryService from "../services/diary"
 import { DiaryEntry } from "../types"
+import { visibilityOptions, weatherOptions } from "../consts"
 
 interface Props {
   diaries: DiaryEntry[]
@@ -21,7 +22,6 @@ export function DiaryForm({ diaries, setDiaries }: Props) {
       .then(addedDiary => setDiaries(diaries.concat(addedDiary)))
       .catch(error => {
         if (axios.isAxiosError(error)) {
-          console.log(error)
           setNotification(`Error: Invalid ${error.response?.data.error[0].path[0]}`)
           setTimeout(() => setNotification(''), 5000)
         }
@@ -44,28 +44,45 @@ export function DiaryForm({ diaries, setDiaries }: Props) {
           <label>
             Date
             <input
+              type="date"
               value={date}
               onChange={e => setDate(e.target.value)}
             />
           </label>
         </div>
         <div>
-          <label>
-            Visibility
-            <input
-              value={visibility}
-              onChange={e => setVisibility(e.target.value)}
-            />
-          </label>
+          Visibility
+          {visibilityOptions.map(option => (
+            <span key={option}>
+              <label>
+                <input
+                  type="radio"
+                  name="visibility"
+                  value={option}
+                  checked={option === visibility}
+                  onChange={e => setVisibility(e.target.value)}
+                />
+                {option}
+              </label>
+            </span>
+          ))}
         </div>
         <div>
-          <label>
-            Weather
-            <input
-              value={weather}
-              onChange={e => setWeather(e.target.value)}
-            />
-          </label>
+          Weather
+          {weatherOptions.map(option => (
+            <span key={option}>
+              <label>
+                <input
+                  type="radio"
+                  name="weather"
+                  value={option}
+                  checked={option === weather}
+                  onChange={e => setWeather(e.target.value)}
+                />
+                {option}
+              </label>
+            </span>
+          ))}
         </div>
         <div>
           <label>
